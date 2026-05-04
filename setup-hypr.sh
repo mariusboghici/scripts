@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Update
 sudo pacman -Syu --noconfirm
 
-# Pachete de bază
 sudo pacman -S --noconfirm \
     hyprland waybar kitty thunar mako wofi \
     pipewire pipewire-alsa pipewire-pulse wireplumber \
@@ -13,25 +11,19 @@ sudo pacman -S --noconfirm \
     papirus-icon-theme graphite-gtk-theme \
     fish git base-devel
 
-# Activare servicii
 sudo systemctl enable --now bluetooth
 
-# Setare shell implicit
 chsh -s /usr/bin/fish
 
-# Creare foldere user
 xdg-user-dirs-update
 
-# Instalare yay (AUR helper)
 cd ~
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si --noconfirm
 
-# Instalare awww (wallpaper daemon)
 yay -S awww --noconfirm
 
-# Config Hyprland
 mkdir -p ~/.config/hypr
 cat << 'EOF' > ~/.config/hypr/hyprland.conf
 monitor=,preferred,auto,1
@@ -56,7 +48,6 @@ input {
 }
 EOF
 
-# Config Waybar (minimal)
 mkdir -p ~/.config/waybar
 cat << 'EOF' > ~/.config/waybar/config
 {
@@ -76,7 +67,6 @@ cat << 'EOF' > ~/.config/waybar/style.css
 }
 EOF
 
-# Setare temă GTK
 gsettings set org.gnome.desktop.interface gtk-theme "Graphite-Blue-Dark"
 gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
 gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
