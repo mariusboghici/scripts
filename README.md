@@ -20,7 +20,3 @@ inclusiv Waybar, Fish, PipeWire, Thunar, notificări, wallpaper daemon (awww)
 - Graphite-Blue-Dark GTK theme
 - Papirus icon theme
 
-## Cum se folosește
-
-1. Clonează repo-ul:
-
