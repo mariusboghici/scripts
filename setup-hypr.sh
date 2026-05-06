@@ -1,35 +1,65 @@
+
 #!/bin/bash
 
+# -------------------------
+# UPDATE SISTEM
+# -------------------------
 sudo pacman -Syu --noconfirm
 
+# -------------------------
+# PACHETE DE BAZĂ PENTRU HYPRLAND
+# -------------------------
 sudo pacman -S --noconfirm \
-    hyprland waybar kitty thunar mako wofi \
+    hyprland \
+    xdg-desktop-portal-hyprland \
+    kitty \
+    wofi \
+    waybar \
+    thunar \
+    mako \
     pipewire pipewire-alsa pipewire-pulse wireplumber \
-    network-manager-applet bluez bluez-utils \
-    polkit-gnome brightnessctl grim slurp wl-clipboard \
-    xdg-desktop-portal-hyprland xdg-user-dirs \
-    papirus-icon-theme graphite-gtk-theme \
-    fish git base-devel
+    networkmanager network-manager-applet \
+    bluez bluez-utils \
+    polkit-gnome \
+    wl-clipboard grim slurp brightnessctl \
+    xdg-user-dirs
 
+# -------------------------
+# ACTIVEAZĂ SERVICII
+# -------------------------
+sudo systemctl enable --now NetworkManager
 sudo systemctl enable --now bluetooth
 
-chsh -s /usr/bin/fish
-
+# -------------------------
+# DIRECTOARE USER
+# -------------------------
 xdg-user-dirs-update
 
+# -------------------------
+# INSTALARE YAY (AUR)
+# -------------------------
 cd ~
-git clone https://aur.archlinux.org/yay.git
+if [ ! -d "yay" ]; then
+    git clone https://aur.archlinux.org/yay.git
+fi
 cd yay
 makepkg -si --noconfirm
 
-yay -S awww --noconfirm
+# -------------------------
+# WALLPAPER DAEMON (swww)
+# -------------------------
+yay -S --noconfirm swww
 
+# -------------------------
+# CONFIG HYPRLAND
+# -------------------------
 mkdir -p ~/.config/hypr
+
 cat << 'EOF' > ~/.config/hypr/hyprland.conf
 monitor=,preferred,auto,1
 
-exec-once = waybar
-exec-once = awww init
+exec-once = sleep 1 && waybar
+exec-once = sleep 1 && swww init
 exec-once = nm-applet
 exec-once = mako
 
@@ -38,17 +68,19 @@ $mod = SUPER
 bind = $mod, RETURN, exec, kitty
 bind = $mod, Q, killactive
 bind = $mod, D, exec, wofi --show drun
-bind = $mod, F, togglefloating
 bind = $mod, E, exec, thunar
-bind = $mod, L, exec, hyprlock
+bind = $mod, F, togglefloating
 
 input {
-    kb_layout = ro
-    kb_variant = winkeys
+    kb_layout = us
 }
 EOF
 
+# -------------------------
+# CONFIG WAYBAR
+# -------------------------
 mkdir -p ~/.config/waybar
+
 cat << 'EOF' > ~/.config/waybar/config
 {
   "layer": "top",
@@ -67,8 +99,4 @@ cat << 'EOF' > ~/.config/waybar/style.css
 }
 EOF
 
-gsettings set org.gnome.desktop.interface gtk-theme "Graphite-Blue-Dark"
-gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
-gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-
-echo "Setup complet. Repornește sesiunea."
+echo "Setup complet. Repornește sesiunea și pornește Hyprland."
